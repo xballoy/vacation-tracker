@@ -30,6 +30,7 @@ export function parseCliArgs(): { year: number } {
         short: "y",
       },
     },
+    allowPositionals: true,
   });
 
   const year = values.year ? parseInt(values.year, 10) : new Date().getFullYear();
