@@ -1,27 +1,47 @@
 import {
-  userResponseSchema,
-  projectResponseSchema,
   detailedReportResponseSchema,
-  type UserResponse,
   type ProjectResponse,
+  projectResponseSchema,
   type TimeEntry,
+  type UserResponse,
+  userResponseSchema,
 } from "./types.ts";
 
 const BASE_URL = "https://api.clockify.me/api/v1";
 const REPORTS_URL = "https://reports.api.clockify.me/v1";
 const PAGE_SIZE = 200;
 
+export type ClockifyClientOptions = {
+  apiKey: string;
+  verbose?: boolean;
+};
+
+export type GetDetailedReportParams = {
+  workspaceId: string;
+  userId: string;
+  projectIds: string[];
+  startDate: Date;
+  endDate: Date;
+};
+
 export class ClockifyClient {
   readonly #apiKey: string;
+  readonly #verbose: boolean;
 
-  constructor(apiKey: string) {
+  constructor({ apiKey, verbose = false }: ClockifyClientOptions) {
     this.#apiKey = apiKey;
+    this.#verbose = verbose;
   }
 
-  private async request<T>(
-    url: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  #log = (message: string): void => {
+    if (this.#verbose) {
+      console.error(`[Clockify] ${message}`);
+    }
+  };
+
+  #request = async <T>(url: string, options: RequestInit = {}): Promise<T> => {
+    this.#log(`${options.method ?? "GET"} ${url}`);
+
     const response = await fetch(url, {
       ...options,
       headers: {
@@ -33,32 +53,32 @@ export class ClockifyClient {
 
     if (!response.ok) {
       throw new Error(
-        `Clockify API error: ${response.status} ${response.statusText} (${url})`
+        `Clockify API error: ${response.status} ${response.statusText}`,
       );
     }
 
     return response.json() as Promise<T>;
-  }
+  };
 
-  async getCurrentUser(): Promise<UserResponse> {
-    const data = await this.request<unknown>(`${BASE_URL}/user`);
+  getCurrentUser = async (): Promise<UserResponse> => {
+    const data = await this.#request<unknown>(`${BASE_URL}/user`);
     return userResponseSchema.parse(data);
-  }
+  };
 
-  async getProjects(workspaceId: string): Promise<ProjectResponse[]> {
-    const data = await this.request<unknown[]>(
-      `${BASE_URL}/workspaces/${workspaceId}/projects`
+  getProjects = async (workspaceId: string): Promise<ProjectResponse[]> => {
+    const data = await this.#request<unknown[]>(
+      `${BASE_URL}/workspaces/${workspaceId}/projects`,
     );
     return data.map((p) => projectResponseSchema.parse(p));
-  }
+  };
 
-  async getDetailedReport(
-    workspaceId: string,
-    userId: string,
-    projectIds: string[],
-    startDate: Date,
-    endDate: Date
-  ): Promise<TimeEntry[]> {
+  getDetailedReport = async ({
+    workspaceId,
+    userId,
+    projectIds,
+    startDate,
+    endDate,
+  }: GetDetailedReportParams): Promise<TimeEntry[]> => {
     const allEntries: TimeEntry[] = [];
     let page = 1;
     let hasMore = true;
@@ -84,21 +104,23 @@ export class ClockifyClient {
         amountShown: "HIDE_AMOUNT",
       };
 
-      const data = await this.request<unknown>(
+      const data = await this.#request<unknown>(
         `${REPORTS_URL}/workspaces/${workspaceId}/reports/detailed`,
         {
           method: "POST",
           body: JSON.stringify(body),
-        }
+        },
       );
 
       const parsed = detailedReportResponseSchema.parse(data);
       allEntries.push(...parsed.timeentries);
+      this.#log(`Fetched page ${page}: ${parsed.timeentries.length} entries`);
 
       hasMore = parsed.timeentries.length === PAGE_SIZE;
       page++;
     }
 
+    this.#log(`Total entries: ${allEntries.length}`);
     return allEntries;
-  }
+  };
 }

@@ -1,9 +1,10 @@
 import { parseArgs } from "node:util";
 import type { Config } from "../domain/config.ts";
 import {
-  type VacationSummary,
-  bankCadToHours,
+  type BankConversionParams,
   bankCadToDays,
+  bankCadToHours,
+  type VacationSummary,
   WORK_DAY_HOURS,
 } from "../domain/vacation.ts";
 
@@ -22,38 +23,52 @@ const MONTHS = [
   "December",
 ];
 
-export function parseCliArgs(): { year: number } {
+export type CliArgs = {
+  year: number;
+  verbose: boolean;
+};
+
+export const parseCliArgs = (): CliArgs => {
   const { values } = parseArgs({
     options: {
       year: {
         type: "string",
         short: "y",
       },
+      verbose: {
+        type: "boolean",
+        short: "v",
+        default: false,
+      },
     },
     allowPositionals: true,
   });
 
-  const year = values.year ? parseInt(values.year, 10) : new Date().getFullYear();
+  const year = values.year
+    ? parseInt(values.year, 10)
+    : new Date().getFullYear();
 
-  if (isNaN(year)) {
+  if (Number.isNaN(year)) {
     throw new Error("Invalid year provided");
   }
 
-  return { year };
-}
+  return { year, verbose: values.verbose ?? false };
+};
 
-function formatHoursAndDays(hours: number): string {
+const formatHoursAndDays = (hours: number): string => {
   const days = hours / WORK_DAY_HOURS;
   return `${hours.toFixed(2)}h (${days.toFixed(2)}d)`;
-}
+};
 
-function formatDays(days: number): string {
-  return days.toFixed(2);
-}
+const formatDays = (days: number): string => days.toFixed(2);
 
-export function formatConfiguration(config: Config): string {
-  const bankHours = bankCadToHours(config.vacancesBankCad, config.hourlyRateCad);
-  const bankDays = bankCadToDays(config.vacancesBankCad, config.hourlyRateCad);
+export const formatConfiguration = (config: Config): string => {
+  const bankParams: BankConversionParams = {
+    bankCad: config.vacancesBankCad,
+    hourlyRate: config.hourlyRateCad,
+  };
+  const bankHours = bankCadToHours(bankParams);
+  const bankDays = bankCadToDays(bankParams);
   const totalVacances = config.vacancesDays + bankDays;
 
   const lines = [
@@ -65,16 +80,21 @@ export function formatConfiguration(config: Config): string {
   ];
 
   return lines.join("\n");
-}
+};
 
-export function formatMonthlyTable(summary: VacationSummary): string {
+export const formatMonthlyTable = (summary: VacationSummary): string => {
   const colWidths = {
     month: 9,
     congeMobile: 16,
     vacances: 16,
   };
 
-  const horizontalLine = (left: string, mid: string, right: string, fill: string) =>
+  const horizontalLine = (
+    left: string,
+    mid: string,
+    right: string,
+    fill: string,
+  ) =>
     left +
     fill.repeat(colWidths.month + 2) +
     mid +
@@ -105,17 +125,17 @@ export function formatMonthlyTable(summary: VacationSummary): string {
       row(
         monthName,
         formatHoursAndDays(breakdown.congeMobileHours),
-        formatHoursAndDays(breakdown.vacancesHours)
-      )
+        formatHoursAndDays(breakdown.vacancesHours),
+      ),
     );
   }
 
   lines.push(horizontalLine("└", "┴", "┘", "─"));
 
   return lines.join("\n");
-}
+};
 
-export function formatSummary(summary: VacationSummary): string {
+export const formatSummary = (summary: VacationSummary): string => {
   const { congeMobile, vacances } = summary;
 
   const lines = [
@@ -125,13 +145,19 @@ export function formatSummary(summary: VacationSummary): string {
   ];
 
   return lines.join("\n");
-}
+};
 
-export function formatOutput(
-  year: number,
-  config: Config,
-  summary: VacationSummary
-): string {
+export type FormatOutputParams = {
+  year: number;
+  config: Config;
+  summary: VacationSummary;
+};
+
+export const formatOutput = ({
+  year,
+  config,
+  summary,
+}: FormatOutputParams): string => {
   const sections = [
     `Vacation Tracker - ${year}`,
     "",
@@ -143,4 +169,4 @@ export function formatOutput(
   ];
 
   return sections.join("\n");
-}
+};

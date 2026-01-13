@@ -35,9 +35,11 @@ export const detailedReportResponseSchema = z.object({
       z.object({
         totalTime: z.number(),
         entriesCount: z.number(),
-      })
+      }),
     )
     .nullable(),
 });
 
-export type DetailedReportResponse = z.infer<typeof detailedReportResponseSchema>;
+export type DetailedReportResponse = z.infer<
+  typeof detailedReportResponseSchema
+>;

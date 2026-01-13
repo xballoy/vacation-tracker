@@ -2,64 +2,77 @@ import "dotenv/config";
 import { ZodError } from "zod";
 import { loadConfigFromEnv } from "./domain/config.ts";
 import { calculateVacationSummary } from "./domain/vacation.ts";
-import { ClockifyClient } from "./infrastructure/clockify/client.ts";
 import {
-  findVacationProjects,
   convertTimeEntries,
+  findVacationProjects,
 } from "./infrastructure/clockify/adapter.ts";
-import { parseCliArgs, formatOutput } from "./presentation/cli.ts";
+import { ClockifyClient } from "./infrastructure/clockify/client.ts";
+import { formatOutput, parseCliArgs } from "./presentation/cli.ts";
 
-async function main(): Promise<void> {
-  const { year } = parseCliArgs();
+const main = async (): Promise<void> => {
+  const cliArgs = parseCliArgs();
   const config = loadConfigFromEnv();
 
-  const client = new ClockifyClient(config.clockifyApiKey);
+  const verbose = cliArgs.verbose || config.verbose;
+
+  const client = new ClockifyClient({
+    apiKey: config.clockifyApiKey,
+    verbose,
+  });
 
   const user = await client.getCurrentUser();
   const projects = await client.getProjects(config.clockifyWorkspaceId);
 
-  const { congeMobileId, vacancesId } = findVacationProjects(projects);
+  const { congeMobileId, vacancesId } = findVacationProjects({
+    projects,
+    congeMobileProjectName: config.congeMobileProjectName,
+    vacancesProjectName: config.vacancesProjectName,
+  });
 
   if (congeMobileId === null && vacancesId === null) {
     console.error(
-      "Error: Could not find 'Congé mobile' or 'Vacances' projects in Clockify"
+      `Error: Could not find '${config.congeMobileProjectName}' or '${config.vacancesProjectName}' projects in Clockify`,
     );
     process.exit(1);
   }
 
   const projectIds = [congeMobileId, vacancesId].filter(
-    (id): id is string => id !== null
+    (id): id is string => id !== null,
   );
 
-  const startDate = new Date(year, 0, 1);
-  const endDate = new Date(year, 11, 31, 23, 59, 59);
+  const startDate = new Date(cliArgs.year, 0, 1);
+  const endDate = new Date(cliArgs.year, 11, 31, 23, 59, 59);
 
-  const timeEntries = await client.getDetailedReport(
-    config.clockifyWorkspaceId,
-    user.id,
+  const timeEntries = await client.getDetailedReport({
+    workspaceId: config.clockifyWorkspaceId,
+    userId: user.id,
     projectIds,
     startDate,
-    endDate
-  );
+    endDate,
+  });
 
-  const vacationEntries = convertTimeEntries(
-    timeEntries,
-    congeMobileId,
-    vacancesId
-  );
+  const vacationEntries = convertTimeEntries({
+    entries: timeEntries,
+    congeMobileProjectId: congeMobileId,
+    vacancesProjectId: vacancesId,
+  });
 
-  const summary = calculateVacationSummary(
-    vacationEntries,
-    config.congeMobileDays,
-    config.vacancesDays,
-    config.vacancesBankCad,
-    config.hourlyRateCad,
-    year
-  );
+  const summary = calculateVacationSummary({
+    entries: vacationEntries,
+    congeMobileAllocation: config.congeMobileDays,
+    vacancesAllocation: config.vacancesDays,
+    vacancesBankCad: config.vacancesBankCad,
+    hourlyRate: config.hourlyRateCad,
+    year: cliArgs.year,
+  });
 
-  const output = formatOutput(year, config, summary);
+  const output = formatOutput({
+    year: cliArgs.year,
+    config,
+    summary,
+  });
   console.log(output);
-}
+};
 
 main().catch((error: unknown) => {
   if (error instanceof ZodError) {

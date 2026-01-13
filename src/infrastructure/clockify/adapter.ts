@@ -1,26 +1,42 @@
 import type { VacationEntry, VacationType } from "../../domain/vacation.ts";
-import type { TimeEntry, ProjectResponse } from "./types.ts";
+import type { ProjectResponse, TimeEntry } from "./types.ts";
 
-const CONGE_MOBILE_PROJECT = "Congé mobile";
-const VACANCES_PROJECT = "Vacances";
+export type FindVacationProjectsParams = {
+  projects: ProjectResponse[];
+  congeMobileProjectName: string;
+  vacancesProjectName: string;
+};
 
-export function findVacationProjects(
-  projects: ProjectResponse[]
-): { congeMobileId: string | null; vacancesId: string | null } {
-  const congeMobile = projects.find((p) => p.name === CONGE_MOBILE_PROJECT);
-  const vacances = projects.find((p) => p.name === VACANCES_PROJECT);
+export type VacationProjectIds = {
+  congeMobileId: string | null;
+  vacancesId: string | null;
+};
+
+export const findVacationProjects = ({
+  projects,
+  congeMobileProjectName,
+  vacancesProjectName,
+}: FindVacationProjectsParams): VacationProjectIds => {
+  const congeMobile = projects.find((p) => p.name === congeMobileProjectName);
+  const vacances = projects.find((p) => p.name === vacancesProjectName);
 
   return {
     congeMobileId: congeMobile?.id ?? null,
     vacancesId: vacances?.id ?? null,
   };
-}
+};
 
-export function timeEntryToVacationEntry(
-  entry: TimeEntry,
-  congeMobileProjectId: string | null,
-  vacancesProjectId: string | null
-): VacationEntry | null {
+export type TimeEntryToVacationEntryParams = {
+  entry: TimeEntry;
+  congeMobileProjectId: string | null;
+  vacancesProjectId: string | null;
+};
+
+export const timeEntryToVacationEntry = ({
+  entry,
+  congeMobileProjectId,
+  vacancesProjectId,
+}: TimeEntryToVacationEntryParams): VacationEntry | null => {
   let type: VacationType | null = null;
 
   if (entry.projectId === congeMobileProjectId) {
@@ -42,16 +58,25 @@ export function timeEntryToVacationEntry(
     hours,
     description: entry.description,
   };
-}
+};
 
-export function convertTimeEntries(
-  entries: TimeEntry[],
-  congeMobileProjectId: string | null,
-  vacancesProjectId: string | null
-): VacationEntry[] {
-  return entries
-    .map((e) =>
-      timeEntryToVacationEntry(e, congeMobileProjectId, vacancesProjectId)
+export type ConvertTimeEntriesParams = {
+  entries: TimeEntry[];
+  congeMobileProjectId: string | null;
+  vacancesProjectId: string | null;
+};
+
+export const convertTimeEntries = ({
+  entries,
+  congeMobileProjectId,
+  vacancesProjectId,
+}: ConvertTimeEntriesParams): VacationEntry[] =>
+  entries
+    .map((entry) =>
+      timeEntryToVacationEntry({
+        entry,
+        congeMobileProjectId,
+        vacancesProjectId,
+      }),
     )
     .filter((e): e is VacationEntry => e !== null);
-}
