@@ -1,26 +1,26 @@
-import { parseArgs } from "node:util";
-import type { Config } from "../domain/config.ts";
+import { parseArgs } from 'node:util';
+import type { Config } from '../domain/config.ts';
 import {
   type BankConversionParams,
   bankCadToDays,
   bankCadToHours,
   type VacationSummary,
   WORK_DAY_HOURS,
-} from "../domain/vacation.ts";
+} from '../domain/vacation.ts';
 
 const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 export type CliArgs = {
@@ -32,12 +32,12 @@ export const parseCliArgs = (): CliArgs => {
   const { values } = parseArgs({
     options: {
       year: {
-        type: "string",
-        short: "y",
+        type: 'string',
+        short: 'y',
       },
       verbose: {
-        type: "boolean",
-        short: "v",
+        type: 'boolean',
+        short: 'v',
         default: false,
       },
     },
@@ -49,7 +49,7 @@ export const parseCliArgs = (): CliArgs => {
     : new Date().getFullYear();
 
   if (Number.isNaN(year)) {
-    throw new Error("Invalid year provided");
+    throw new Error('Invalid year provided');
   }
 
   return { year, verbose: values.verbose ?? false };
@@ -72,14 +72,14 @@ export const formatConfiguration = (config: Config): string => {
   const totalVacances = config.vacancesDays + bankDays;
 
   const lines = [
-    "Configuration:",
+    'Configuration:',
     `  Congé mobile allocation: ${config.congeMobileDays} days`,
     `  Vacances allocation: ${config.vacancesDays} days`,
     `  Vacances bank: ${config.vacancesBankCad} CAD (${formatDays(bankHours)}h / ${formatDays(bankDays)} days @ ${config.hourlyRateCad} CAD/h)`,
     `  Total vacances available: ${formatDays(totalVacances)} days`,
   ];
 
-  return lines.join("\n");
+  return lines.join('\n');
 };
 
 export const formatMonthlyTable = (summary: VacationSummary): string => {
@@ -104,23 +104,23 @@ export const formatMonthlyTable = (summary: VacationSummary): string => {
     right;
 
   const row = (month: string, congeMobile: string, vacances: string) =>
-    "│ " +
+    '│ ' +
     month.padEnd(colWidths.month) +
-    " │ " +
+    ' │ ' +
     congeMobile.padEnd(colWidths.congeMobile) +
-    " │ " +
+    ' │ ' +
     vacances.padEnd(colWidths.vacances) +
-    " │";
+    ' │';
 
   const lines = [
-    "Monthly Breakdown:",
-    horizontalLine("┌", "┬", "┐", "─"),
-    row("Month", "Congé mobile", "Vacances"),
-    horizontalLine("├", "┼", "┤", "─"),
+    'Monthly Breakdown:',
+    horizontalLine('┌', '┬', '┐', '─'),
+    row('Month', 'Congé mobile', 'Vacances'),
+    horizontalLine('├', '┼', '┤', '─'),
   ];
 
   for (const breakdown of summary.monthlyBreakdown) {
-    const monthName = MONTHS[breakdown.month - 1] ?? "";
+    const monthName = MONTHS[breakdown.month - 1] ?? '';
     lines.push(
       row(
         monthName,
@@ -130,21 +130,21 @@ export const formatMonthlyTable = (summary: VacationSummary): string => {
     );
   }
 
-  lines.push(horizontalLine("└", "┴", "┘", "─"));
+  lines.push(horizontalLine('└', '┴', '┘', '─'));
 
-  return lines.join("\n");
+  return lines.join('\n');
 };
 
 export const formatSummary = (summary: VacationSummary): string => {
   const { congeMobile, vacances } = summary;
 
   const lines = [
-    "Summary:",
+    'Summary:',
     `  Congé mobile: ${formatDays(congeMobile.remaining)}/${formatDays(congeMobile.allocated)} days remaining (${formatDays(congeMobile.used)} used)`,
     `  Vacances: ${formatDays(vacances.remaining)}/${formatDays(vacances.totalAvailable)} days remaining (${formatDays(vacances.used)} used)`,
   ];
 
-  return lines.join("\n");
+  return lines.join('\n');
 };
 
 export type FormatOutputParams = {
@@ -160,13 +160,13 @@ export const formatOutput = ({
 }: FormatOutputParams): string => {
   const sections = [
     `Vacation Tracker - ${year}`,
-    "",
+    '',
     formatConfiguration(config),
-    "",
+    '',
     formatMonthlyTable(summary),
-    "",
+    '',
     formatSummary(summary),
   ];
 
-  return sections.join("\n");
+  return sections.join('\n');
 };

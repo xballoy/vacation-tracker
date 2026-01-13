@@ -1,6 +1,6 @@
 export const WORK_DAY_HOURS = 7.5;
 
-export type VacationType = "conge_mobile" | "vacances";
+export type VacationType = 'conge_mobile' | 'vacances';
 
 export type VacationEntry = {
   date: Date;
@@ -67,11 +67,11 @@ export const calculateVacationSummary = ({
   const yearEntries = entries.filter((e) => e.date.getFullYear() === year);
 
   const congeMobileUsedHours = yearEntries
-    .filter((e) => e.type === "conge_mobile")
+    .filter((e) => e.type === 'conge_mobile')
     .reduce((sum, e) => sum + e.hours, 0);
 
   const vacancesUsedHours = yearEntries
-    .filter((e) => e.type === "vacances")
+    .filter((e) => e.type === 'vacances')
     .reduce((sum, e) => sum + e.hours, 0);
 
   const bankDays = bankCadToDays({ bankCad: vacancesBankCad, hourlyRate });
@@ -87,10 +87,10 @@ export const calculateVacationSummary = ({
       return {
         month,
         congeMobileHours: monthEntries
-          .filter((e) => e.type === "conge_mobile")
+          .filter((e) => e.type === 'conge_mobile')
           .reduce((sum, e) => sum + e.hours, 0),
         vacancesHours: monthEntries
-          .filter((e) => e.type === "vacances")
+          .filter((e) => e.type === 'vacances')
           .reduce((sum, e) => sum + e.hours, 0),
       };
     },

@@ -5,10 +5,10 @@ import {
   type TimeEntry,
   type UserResponse,
   userResponseSchema,
-} from "./types.ts";
+} from './types.ts';
 
-const BASE_URL = "https://api.clockify.me/api/v1";
-const REPORTS_URL = "https://reports.api.clockify.me/v1";
+const BASE_URL = 'https://api.clockify.me/api/v1';
+const REPORTS_URL = 'https://reports.api.clockify.me/v1';
 const PAGE_SIZE = 200;
 
 export type ClockifyClientOptions = {
@@ -40,13 +40,13 @@ export class ClockifyClient {
   };
 
   #request = async <T>(url: string, options: RequestInit = {}): Promise<T> => {
-    this.#log(`${options.method ?? "GET"} ${url}`);
+    this.#log(`${options.method ?? 'GET'} ${url}`);
 
     const response = await fetch(url, {
       ...options,
       headers: {
-        "X-Api-Key": this.#apiKey,
-        "Content-Type": "application/json",
+        'X-Api-Key': this.#apiKey,
+        'Content-Type': 'application/json',
         ...options.headers,
       },
     });
@@ -93,21 +93,21 @@ export class ClockifyClient {
         },
         users: {
           ids: [userId],
-          contains: "CONTAINS",
-          status: "ALL",
+          contains: 'CONTAINS',
+          status: 'ALL',
         },
         projects: {
           ids: projectIds,
-          contains: "CONTAINS",
-          status: "ALL",
+          contains: 'CONTAINS',
+          status: 'ALL',
         },
-        amountShown: "HIDE_AMOUNT",
+        amountShown: 'HIDE_AMOUNT',
       };
 
       const data = await this.#request<unknown>(
         `${REPORTS_URL}/workspaces/${workspaceId}/reports/detailed`,
         {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify(body),
         },
       );

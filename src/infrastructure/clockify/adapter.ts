@@ -1,5 +1,5 @@
-import type { VacationEntry, VacationType } from "../../domain/vacation.ts";
-import type { ProjectResponse, TimeEntry } from "./types.ts";
+import type { VacationEntry, VacationType } from '../../domain/vacation.ts';
+import type { ProjectResponse, TimeEntry } from './types.ts';
 
 export type FindVacationProjectsParams = {
   projects: ProjectResponse[];
@@ -40,9 +40,9 @@ export const timeEntryToVacationEntry = ({
   let type: VacationType | null = null;
 
   if (entry.projectId === congeMobileProjectId) {
-    type = "conge_mobile";
+    type = 'conge_mobile';
   } else if (entry.projectId === vacancesProjectId) {
-    type = "vacances";
+    type = 'vacances';
   }
 
   if (type === null) {

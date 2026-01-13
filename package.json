@@ -5,12 +5,12 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "node src/index.ts",
+    "start": "node src/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "biome check src",
-    "lint:fix": "biome check --write src",
-    "format": "biome format --write src"
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "lint:ci": "biome ci"
   },
   "author": "Xavier Balloy",
   "license": "MIT",

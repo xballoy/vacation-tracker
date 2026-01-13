@@ -1,13 +1,13 @@
-import "dotenv/config";
-import { ZodError } from "zod";
-import { loadConfigFromEnv } from "./domain/config.ts";
-import { calculateVacationSummary } from "./domain/vacation.ts";
+import 'dotenv/config';
+import { ZodError } from 'zod';
+import { loadConfigFromEnv } from './domain/config.ts';
+import { calculateVacationSummary } from './domain/vacation.ts';
 import {
   convertTimeEntries,
   findVacationProjects,
-} from "./infrastructure/clockify/adapter.ts";
-import { ClockifyClient } from "./infrastructure/clockify/client.ts";
-import { formatOutput, parseCliArgs } from "./presentation/cli.ts";
+} from './infrastructure/clockify/adapter.ts';
+import { ClockifyClient } from './infrastructure/clockify/client.ts';
+import { formatOutput, parseCliArgs } from './presentation/cli.ts';
 
 const main = async (): Promise<void> => {
   const cliArgs = parseCliArgs();
@@ -76,9 +76,9 @@ const main = async (): Promise<void> => {
 
 main().catch((error: unknown) => {
   if (error instanceof ZodError) {
-    console.error("Configuration error:");
+    console.error('Configuration error:');
     for (const issue of error.issues) {
-      console.error(`  ${issue.path.join(".")}: ${issue.message}`);
+      console.error(`  ${issue.path.join('.')}: ${issue.message}`);
     }
     process.exit(1);
   }
@@ -88,6 +88,6 @@ main().catch((error: unknown) => {
     process.exit(1);
   }
 
-  console.error("An unexpected error occurred");
+  console.error('An unexpected error occurred');
   process.exit(1);
 });
