@@ -13,7 +13,7 @@ CLI application to track vacation days using Clockify API data.
 
 ## Configuration
 
-Create a `.env` file with:
+Create a `.env` file:
 
 ```
 CLOCKIFY_API_KEY=your_api_key
@@ -24,42 +24,18 @@ VACANCES_BANK_CAD=10000
 HOURLY_RATE_CAD=60
 ```
 
+Optional settings:
+
+```
+CONGE_MOBILE_PROJECT_NAME=Congé mobile
+VACANCES_PROJECT_NAME=Vacances
+VERBOSE=false
+```
+
 ## Usage
 
 ```bash
-npm start -- --year 2025
-```
-
-Default: current year if `--year` is not specified.
-
-## Output
-
-```
-Vacation Tracker - 2025
-
-Configuration:
-  Congé mobile allocation: 3 days
-  Vacances allocation: 25 days
-  Vacances bank: 10000 CAD (166.67h / 22.22 days @ 60 CAD/h)
-  Total vacances available: 47.22 days
-
-Monthly Breakdown:
-┌─────────┬──────────────────┬──────────────────┐
-│ Month   │ Congé mobile     │ Vacances         │
-├─────────┼──────────────────┼──────────────────┤
-│ January │ 0.00h (0.00d)    │ 15.00h (2.00d)   │
-│ ...     │ ...              │ ...              │
-└─────────┴──────────────────┴──────────────────┘
-
-Summary:
-  Congé mobile: 2/3 days remaining (1 used)
-  Vacances: 37.22/47.22 days remaining (10 used)
-```
-
-## Development
-
-```bash
-npm install
-npm run build
-npm start
+pnpm dev
+pnpm dev -- --year 2025
+pnpm dev -- --verbose
 ```
