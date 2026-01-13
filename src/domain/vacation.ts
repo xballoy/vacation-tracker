@@ -34,8 +34,6 @@ export type VacationSummary = {
 
 export const hoursToDays = (hours: number): number => hours / WORK_DAY_HOURS;
 
-export const daysToHours = (days: number): number => days * WORK_DAY_HOURS;
-
 export type BankConversionParams = {
   bankCad: number;
   hourlyRate: number;
