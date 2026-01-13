@@ -1,0 +1,25 @@
+{
+  "name": "vacation-tracker",
+  "version": "1.0.0",
+  "description": "CLI application to track vacation days using Clockify API data",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.0",
+  "dependencies": {
+    "dotenv": "17.2.3",
+    "zod": "4.3.5"
+  },
+  "devDependencies": {
+    "@tsconfig/node24": "24.0.3",
+    "@tsconfig/strictest": "2.0.8",
+    "@types/node": "24.10.8",
+    "typescript": "5.9.3"
+  }
+}
