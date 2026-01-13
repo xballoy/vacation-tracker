@@ -1,5 +1,5 @@
-import type { VacationEntry, VacationType } from "../../domain/vacation.js";
-import type { TimeEntry, ProjectResponse } from "./types.js";
+import type { VacationEntry, VacationType } from "../../domain/vacation.ts";
+import type { TimeEntry, ProjectResponse } from "./types.ts";
 
 const CONGE_MOBILE_PROJECT = "Congé mobile";
 const VACANCES_PROJECT = "Vacances";

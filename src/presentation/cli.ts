@@ -1,11 +1,11 @@
 import { parseArgs } from "node:util";
-import type { Config } from "../domain/config.js";
+import type { Config } from "../domain/config.ts";
 import {
   type VacationSummary,
   bankCadToHours,
   bankCadToDays,
   WORK_DAY_HOURS,
-} from "../domain/vacation.js";
+} from "../domain/vacation.ts";
 
 const MONTHS = [
   "January",

@@ -1,13 +1,13 @@
 import "dotenv/config";
 import { ZodError } from "zod";
-import { loadConfigFromEnv } from "./domain/config.js";
-import { calculateVacationSummary } from "./domain/vacation.js";
-import { ClockifyClient } from "./infrastructure/clockify/client.js";
+import { loadConfigFromEnv } from "./domain/config.ts";
+import { calculateVacationSummary } from "./domain/vacation.ts";
+import { ClockifyClient } from "./infrastructure/clockify/client.ts";
 import {
   findVacationProjects,
   convertTimeEntries,
-} from "./infrastructure/clockify/adapter.js";
-import { parseCliArgs, formatOutput } from "./presentation/cli.js";
+} from "./infrastructure/clockify/adapter.ts";
+import { parseCliArgs, formatOutput } from "./presentation/cli.ts";
 
 async function main(): Promise<void> {
   const { year } = parseCliArgs();

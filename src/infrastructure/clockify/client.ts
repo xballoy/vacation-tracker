@@ -5,14 +5,18 @@ import {
   type UserResponse,
   type ProjectResponse,
   type TimeEntry,
-} from "./types.js";
+} from "./types.ts";
 
 const BASE_URL = "https://api.clockify.me/api/v1";
 const REPORTS_URL = "https://reports.api.clockify.me/v1";
 const PAGE_SIZE = 200;
 
 export class ClockifyClient {
-  constructor(private readonly apiKey: string) {}
+  readonly #apiKey: string;
+
+  constructor(apiKey: string) {
+    this.#apiKey = apiKey;
+  }
 
   private async request<T>(
     url: string,
@@ -21,7 +25,7 @@ export class ClockifyClient {
     const response = await fetch(url, {
       ...options,
       headers: {
-        "X-Api-Key": this.apiKey,
+        "X-Api-Key": this.#apiKey,
         "Content-Type": "application/json",
         ...options.headers,
       },
@@ -29,7 +33,7 @@ export class ClockifyClient {
 
     if (!response.ok) {
       throw new Error(
-        `Clockify API error: ${response.status} ${response.statusText}`
+        `Clockify API error: ${response.status} ${response.statusText} (${url})`
       );
     }
 
@@ -77,6 +81,7 @@ export class ClockifyClient {
           contains: "CONTAINS",
           status: "ALL",
         },
+        amountShown: "HIDE_AMOUNT",
       };
 
       const data = await this.request<unknown>(
