@@ -66,10 +66,30 @@ export class ClockifyClient {
   };
 
   getProjects = async (workspaceId: string): Promise<ProjectResponse[]> => {
-    const data = await this.#request<unknown[]>(
-      `${BASE_URL}/workspaces/${workspaceId}/projects`,
-    );
-    return data.map((p) => projectResponseSchema.parse(p));
+    const allProjects: unknown[] = [];
+    let page = 1;
+    let hasMore = true;
+
+    while (hasMore) {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        'page-size': PAGE_SIZE.toString(),
+      });
+
+      const data = await this.#request<unknown[]>(
+        `${BASE_URL}/workspaces/${workspaceId}/projects?${params}`,
+      );
+
+      allProjects.push(...data);
+      this.#log(`Fetched projects page ${page}: ${data.length} projects`);
+
+      hasMore = data.length === PAGE_SIZE;
+      page++;
+    }
+
+    this.#log(`Total projects fetched: ${allProjects.length}`);
+
+    return allProjects.map((p) => projectResponseSchema.parse(p));
   };
 
   getDetailedReport = async ({
