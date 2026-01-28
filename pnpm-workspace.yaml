@@ -6,3 +6,6 @@ onlyBuiltDependencies:
 strictDepBuilds: true
 
 trustPolicy: no-downgrade
+minimumReleaseAgeExclude:
+  # Renovate security update: pnpm@10.28.2
+  - pnpm@10.28.2
