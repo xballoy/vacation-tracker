@@ -25,6 +25,6 @@
     "@tsconfig/strictest": "2.0.8",
     "@types/node": "24.12.4",
     "typescript": "5.9.3",
-    "vitest": "4.1.6"
+    "vitest": "4.1.7"
   }
 }
