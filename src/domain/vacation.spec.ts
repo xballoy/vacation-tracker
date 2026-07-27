@@ -25,13 +25,12 @@ describe('bankCadToHours', () => {
     { bankCad: 600, hourlyRate: 60, expected: 10 },
     { bankCad: 1000, hourlyRate: 100, expected: 10 },
     { bankCad: 1000, hourlyRate: 50, expected: 20 },
-  ])('converts $bankCad CAD at $hourlyRate/h to $expected hours', ({
-    bankCad,
-    hourlyRate,
-    expected,
-  }) => {
-    expect(bankCadToHours({ bankCad, hourlyRate })).toBe(expected);
-  });
+  ])(
+    'converts $bankCad CAD at $hourlyRate/h to $expected hours',
+    ({ bankCad, hourlyRate, expected }) => {
+      expect(bankCadToHours({ bankCad, hourlyRate })).toBe(expected);
+    },
+  );
 });
 
 describe('bankCadToDays', () => {
@@ -39,13 +38,12 @@ describe('bankCadToDays', () => {
     { bankCad: 0, hourlyRate: 60, expected: 0 },
     { bankCad: 450, hourlyRate: 60, expected: 1 },
     { bankCad: 900, hourlyRate: 60, expected: 2 },
-  ])('converts $bankCad CAD at $hourlyRate/h to $expected days', ({
-    bankCad,
-    hourlyRate,
-    expected,
-  }) => {
-    expect(bankCadToDays({ bankCad, hourlyRate })).toBe(expected);
-  });
+  ])(
+    'converts $bankCad CAD at $hourlyRate/h to $expected days',
+    ({ bankCad, hourlyRate, expected }) => {
+      expect(bankCadToDays({ bankCad, hourlyRate })).toBe(expected);
+    },
+  );
 });
 
 describe('calculateVacationSummary', () => {
