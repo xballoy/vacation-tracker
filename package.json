@@ -14,9 +14,9 @@
   },
   "author": "Xavier Balloy",
   "license": "MIT",
-  "packageManager": "pnpm@12.8.2",
+  "packageManager": "pnpm@12.11.1",
   "dependencies": {
-    "dotenv": "18.0.5",
+    "dotenv": "18.0.6",
     "zod": "4.6.5"
   },
   "devDependencies": {
