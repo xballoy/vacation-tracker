@@ -14,13 +14,13 @@
   },
   "author": "Xavier Balloy",
   "license": "MIT",
-  "packageManager": "pnpm@12.14.0",
+  "packageManager": "pnpm@12.15.0",
   "dependencies": {
-    "dotenv": "18.0.8",
+    "dotenv": "18.0.9",
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.15",
+    "@biomejs/biome": "2.6.2",
     "@tsconfig/node24": "24.0.5",
     "@tsconfig/strictest": "2.0.8",
     "@types/node": "24.19.2",
