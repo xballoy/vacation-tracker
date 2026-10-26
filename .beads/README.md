@@ -78,4 +78,4 @@ bd create "Try out Beads"
 
 ---
 
-*Beads: Issue tracking that moves at the speed of thought* ⚡
+_Beads: Issue tracking that moves at the speed of thought_ ⚡
