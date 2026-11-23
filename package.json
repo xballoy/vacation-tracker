@@ -14,18 +14,18 @@
   },
   "author": "Xavier Balloy",
   "license": "MIT",
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.22.0",
   "dependencies": {
-    "dotenv": "18.0.9",
+    "dotenv": "18.0.10",
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.2",
-    "@kjanat/actionlint": "1.17.0",
-    "@tsconfig/node26": "26.0.0",
-    "@tsconfig/strictest": "2.0.8",
+    "@biomejs/biome": "2.6.8",
+    "@kjanat/actionlint": "1.17.1",
+    "@tsconfig/node26": "26.0.2",
+    "@tsconfig/strictest": "2.0.9",
     "@types/node": "24.19.2",
     "typescript": "7.0.2",
-    "vitest": "5.0.5"
+    "vitest": "5.1.1"
   }
 }
