@@ -9,7 +9,7 @@ export const configSchema = z.object({
   hourlyRateCad: z.coerce.number().positive(),
   congeMobileProjectName: z.string().default('Congé mobile'),
   vacancesProjectName: z.string().default('Vacances'),
-  verbose: z.coerce.boolean().default(false),
+  verbose: z.stringbool().default(false),
 });
 
 export type Config = z.infer<typeof configSchema>;
