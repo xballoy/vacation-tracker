@@ -34,12 +34,12 @@ VACANCES_BANK_CAD=5000
 HOURLY_RATE_CAD=50
 ```
 
-Optional settings. The project names shown are the defaults, and verbose output is off unless `VERBOSE=true` is set:
+Optional settings, shown with their defaults. `VERBOSE` accepts `true`/`false`, `1`/`0`, `yes`/`no` or `on`/`off`:
 
 ```
 CONGE_MOBILE_PROJECT_NAME=Congé mobile
 VACANCES_PROJECT_NAME=Vacances
-VERBOSE=true
+VERBOSE=false
 ```
 
 ## Usage
