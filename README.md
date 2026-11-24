@@ -11,6 +11,16 @@ CLI application to track vacation days using Clockify API data.
 - Supports vacation bank carryover from previous years (converted from CAD)
 - Displays monthly breakdown and summary
 
+## Requirements
+
+- Node.js 26 (version pinned in `.nvmrc`)
+- pnpm, through Corepack (version pinned in `package.json`)
+
+```bash
+corepack enable
+pnpm install
+```
+
 ## Configuration
 
 Create a `.env` file:
@@ -24,18 +34,28 @@ VACANCES_BANK_CAD=5000
 HOURLY_RATE_CAD=50
 ```
 
-Optional settings:
+Optional settings. The project names shown are the defaults, and verbose output is off unless `VERBOSE=true` is set:
 
 ```
 CONGE_MOBILE_PROJECT_NAME=Congé mobile
 VACANCES_PROJECT_NAME=Vacances
-VERBOSE=false
+VERBOSE=true
 ```
 
 ## Usage
 
 ```bash
-pnpm dev
-pnpm dev -- --year 2025
-pnpm dev -- --verbose
+pnpm start
+pnpm start --year 2025
+pnpm start --verbose
+```
+
+`-y` and `-v` are short for `--year` and `--verbose`. The year defaults to the current year.
+
+## Development
+
+```bash
+pnpm test
+pnpm lint
+pnpm lint:fix
 ```
